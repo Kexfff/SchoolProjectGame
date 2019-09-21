@@ -25,11 +25,6 @@ void AFPCharacter_CPP::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GEngine)
-	{
-		// Put up a debug message for five seconds. The -1 "Key" value (first argument) indicates that we will never need to update or refresh this message.
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("We are using FPSCharacter."));
-	}
 	
 }
 
@@ -52,8 +47,8 @@ void AFPCharacter_CPP::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis("Turn", this, &AFPCharacter_CPP::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPCharacter_CPP::AddControllerPitchInput);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed,this, &AFPCharacter_CPP::StartJump);
-	PlayerInputComponent->BindAction("Jump", IE_Released,this, &AFPCharacter_CPP::StopJump);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed,this, &AFPCharacter_CPP::StartJump);
+	//PlayerInputComponent->BindAction("Jump", IE_Released,this, &AFPCharacter_CPP::StopJump);
 }
 
 void AFPCharacter_CPP::MoveForward(float Value)
@@ -66,20 +61,5 @@ void AFPCharacter_CPP::MoveRight(float Value)
 {
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
-}
-
-void AFPCharacter_CPP::StartJump()
-{
-	//if (GEngine){
-		// Put up a debug message for five seconds. The -1 "Key" value (first argument) indicates that we will never need to update or refresh this message.
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("Jumping."));
-	//}
-
-	bPressedJump = true;
-}
-
-void AFPCharacter_CPP::StopJump()
-{
-	bPressedJump = false;
 }
 

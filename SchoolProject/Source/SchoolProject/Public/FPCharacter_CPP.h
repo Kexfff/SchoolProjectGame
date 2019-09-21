@@ -36,12 +36,9 @@ public:
 	UFUNCTION()
 	void MoveRight(float Value);
 
-	UFUNCTION()
-	void StartJump();
-	UFUNCTION()
-	void StopJump();
-
 	UPROPERTY(EditAnywhere)
 	UCameraComponent* FPCameraComponent;
+
+	bool IsJumping();
 
 };
