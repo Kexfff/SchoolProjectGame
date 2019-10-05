@@ -3,6 +3,9 @@
 
 #include "FPCharacter_CPP.h"
 #include "..\Public\FPCharacter_CPP.h"
+#include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 AFPCharacter_CPP::AFPCharacter_CPP()
@@ -25,7 +28,10 @@ void AFPCharacter_CPP::BeginPlay()
 {
 	Super::BeginPlay();
 
+	Movement = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	//Movement->MaxWalkSpeed = 100;
 	
+
 }
 
 // Called every frame
@@ -61,5 +67,10 @@ void AFPCharacter_CPP::MoveRight(float Value)
 {
 	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
 	AddMovementInput(Direction, Value);
+}
+
+void AFPCharacter_CPP::SetMaxSpeed(float Speed)
+{
+	Movement->MaxWalkSpeed = Speed;
 }
 

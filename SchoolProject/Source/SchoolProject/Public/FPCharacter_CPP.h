@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Camera/CameraComponent.h"
-#include "Components/SceneComponent.h"
 #include "FPCharacter_CPP.generated.h"
+
+class UCameraComponent;
+class UCharacterMovementComponent;
 
 UCLASS()
 class SCHOOLPROJECT_API AFPCharacter_CPP : public ACharacter
@@ -40,5 +41,11 @@ public:
 	UCameraComponent* FPCameraComponent;
 
 	bool IsJumping();
+
+	UFUNCTION(BlueprintCallable)
+	void SetMaxSpeed(float Speed);
+
+private:
+	UCharacterMovementComponent* Movement;
 
 };
