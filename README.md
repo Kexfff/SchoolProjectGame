@@ -2,6 +2,5 @@
 
 TODO
 
-1) level design
-2) AI navigation and aiming 
+1) AI navigation and aiming 
  >>>
