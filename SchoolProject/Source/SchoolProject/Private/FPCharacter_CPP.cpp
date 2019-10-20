@@ -20,7 +20,7 @@ AFPCharacter_CPP::AFPCharacter_CPP()
 	FPCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
 	FPCameraComponent->bUsePawnControlRotation = true;
 
-	MaxUseDistance = 100;
+	MaxUseDistance = 200;
 	bHasNewFocus = true;
 
 }
