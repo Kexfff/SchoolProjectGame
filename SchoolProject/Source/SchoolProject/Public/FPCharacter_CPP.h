@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class UCharacterMovementComponent;
+class AUsableActor;
 
 UCLASS()
 class SCHOOLPROJECT_API AFPCharacter_CPP : public ACharacter
@@ -18,11 +19,20 @@ public:
 	// Sets default values for this character's properties
 	AFPCharacter_CPP();
 
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	
+	AUsableActor* GetUsableInView();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	float MaxUseDistance;
+
+	bool bHasNewFocus;
+
+	AUsableActor* FocusedUsableActor = nullptr;
 
 
 public:	
@@ -44,6 +54,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetMaxSpeed(float Speed);
+
+
+	UFUNCTION(BlueprintCallable, WithValidation, Server, Reliable, Category = PlayerAbility)
+		virtual void Use();
+
+
+	void Use_Implementation();
+
 
 private:
 	UCharacterMovementComponent* Movement;

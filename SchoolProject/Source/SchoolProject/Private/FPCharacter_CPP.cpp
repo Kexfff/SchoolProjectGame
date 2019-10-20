@@ -5,6 +5,8 @@
 #include "..\Public\FPCharacter_CPP.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "UsableActor.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 // Sets default values
@@ -14,12 +16,12 @@ AFPCharacter_CPP::AFPCharacter_CPP()
 	PrimaryActorTick.bCanEverTick = true;
 
 	FPCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-
 	FPCameraComponent->SetupAttachment((USceneComponent*)GetCapsuleComponent());
-
 	FPCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
-
 	FPCameraComponent->bUsePawnControlRotation = true;
+
+	MaxUseDistance = 100;
+	bHasNewFocus = true;
 
 }
 
@@ -34,10 +36,54 @@ void AFPCharacter_CPP::BeginPlay()
 
 }
 
+AUsableActor* AFPCharacter_CPP::GetUsableInView()
+{
+	FVector CamLoc;
+	FRotator CamRot;
+
+	if (Controller == NULL) return NULL;
+
+	Controller->GetPlayerViewPoint(CamLoc, CamRot);
+	const FVector StartTrace = CamLoc;
+	const FVector Direction = CamRot.Vector();
+	const FVector EndTrace = StartTrace + (Direction * MaxUseDistance);
+
+	FCollisionQueryParams TraceParams(FName(TEXT("")), true, this);
+	//TraceParams.bTraceAsyncScene = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+	TraceParams.bTraceComplex = true;
+
+	FHitResult Hit(ForceInit);
+	GetWorld()->LineTraceSingleByObjectType(Hit, StartTrace, EndTrace, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),TraceParams);
+
+	return Cast<AUsableActor>(Hit.GetActor());
+}
+
 // Called every frame
 void AFPCharacter_CPP::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (Controller && Controller->IsLocalController()) {
+		AUsableActor* Usable = GetUsableInView();
+		//UE_LOG(LogTemp, Warning, TEXT("Usable: %s"), *Usable->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("FocusedUsableActor: %s"), *FocusedUsableActor->GetName());
+		if (FocusedUsableActor != Usable) {
+			if (FocusedUsableActor) {
+				FocusedUsableActor->EndFocusItem();
+			}
+			bHasNewFocus = true;
+		}
+
+		FocusedUsableActor = Usable;
+
+		if (Usable) {
+			if (bHasNewFocus) {
+				Usable->StartFocusItem();
+				bHasNewFocus = false;
+			}
+		}
+	}
 
 }
 
@@ -52,6 +98,8 @@ void AFPCharacter_CPP::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	PlayerInputComponent->BindAxis("Turn", this, &AFPCharacter_CPP::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPCharacter_CPP::AddControllerPitchInput);
+
+	PlayerInputComponent->BindAction("Use", IE_Pressed, this, &AFPCharacter_CPP::Use);
 
 	//PlayerInputComponent->BindAction("Jump", IE_Pressed,this, &AFPCharacter_CPP::StartJump);
 	//PlayerInputComponent->BindAction("Jump", IE_Released,this, &AFPCharacter_CPP::StopJump);
@@ -74,3 +122,18 @@ void AFPCharacter_CPP::SetMaxSpeed(float Speed)
 	Movement->MaxWalkSpeed = Speed;
 }
 
+
+void AFPCharacter_CPP::Use_Implementation() 
+{
+	AUsableActor* Usable = GetUsableInView();
+
+	if (Usable) {
+		Usable->OnUsed(this);
+	}
+
+}
+
+bool AFPCharacter_CPP::Use_Validate()
+{
+	return true;
+}
