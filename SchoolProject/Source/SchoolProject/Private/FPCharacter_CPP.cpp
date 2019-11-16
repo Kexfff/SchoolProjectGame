@@ -123,7 +123,17 @@ void AFPCharacter_CPP::SetMaxSpeed(float Speed)
 }
 
 
-void AFPCharacter_CPP::Use_Implementation() 
+void AFPCharacter_CPP::SetJumpVelocity(float Velocity)
+{
+	Movement->JumpZVelocity = Velocity;
+}
+
+float AFPCharacter_CPP::GetJumpVelocity()
+{
+	return Movement->JumpZVelocity;
+}
+
+void AFPCharacter_CPP::Use_Implementation()
 {
 	AUsableActor* Usable = GetUsableInView();
 

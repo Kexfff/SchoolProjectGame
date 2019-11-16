@@ -59,8 +59,15 @@ public:
 	UFUNCTION(BlueprintCallable, WithValidation, Server, Reliable, Category = PlayerAbility)
 		virtual void Use();
 
+	UFUNCTION(BlueprintCallable)
+		void SetJumpVelocity(float Velocity);
+	UFUNCTION(BlueprintCallable)
+		float GetJumpVelocity();
+
 
 	void Use_Implementation();
+
+
 
 
 private:
