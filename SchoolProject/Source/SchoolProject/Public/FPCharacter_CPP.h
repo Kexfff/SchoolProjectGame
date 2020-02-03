@@ -26,13 +26,17 @@ protected:
 	virtual void BeginPlay() override;
 
 	AUsableActor* GetUsableInView();
+	AFPCharacter_CPP* GetActorInView();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float MaxUseDistance;
 
 	bool bHasNewFocus;
+	bool bHasNewActor;
+	bool TradeText;
 
 	AUsableActor* FocusedUsableActor = nullptr;
+	AFPCharacter_CPP* LastFocusedActor = nullptr;
 
 
 public:	
@@ -66,6 +70,14 @@ public:
 
 
 	void Use_Implementation();
+
+
+	UFUNCTION(BlueprintImplementableEvent)
+		bool OnUsed(AFPCharacter_CPP* character);
+	UFUNCTION(BlueprintImplementableEvent)
+		bool StartFocusItem();
+	UFUNCTION(BlueprintImplementableEvent)
+		bool EndFocusItem();
 
 
 

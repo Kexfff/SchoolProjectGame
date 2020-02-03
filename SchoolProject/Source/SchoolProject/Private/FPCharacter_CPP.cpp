@@ -59,6 +59,29 @@ AUsableActor* AFPCharacter_CPP::GetUsableInView()
 	return Cast<AUsableActor>(Hit.GetActor());
 }
 
+AFPCharacter_CPP* AFPCharacter_CPP::GetActorInView()
+{
+	FVector CamLoc;
+	FRotator CamRot;
+
+	if (Controller == NULL) return NULL;
+
+	Controller->GetPlayerViewPoint(CamLoc, CamRot);
+	const FVector StartTrace = CamLoc;
+	const FVector Direction = CamRot.Vector();
+	const FVector EndTrace = StartTrace + (Direction * MaxUseDistance);
+
+	FCollisionQueryParams TraceParams(FName(TEXT("")), true, this);
+	//TraceParams.bTraceAsyncScene = true;
+	TraceParams.bReturnPhysicalMaterial = false;
+	TraceParams.bTraceComplex = true;
+
+	FHitResult Hit(ForceInit);
+	GetWorld()->LineTraceSingleByObjectType(Hit, StartTrace, EndTrace, FCollisionObjectQueryParams(ECollisionChannel::ECC_Pawn), TraceParams);
+
+	return Cast<AFPCharacter_CPP>(Hit.GetActor());
+}
+
 // Called every frame
 void AFPCharacter_CPP::Tick(float DeltaTime)
 {
@@ -66,21 +89,32 @@ void AFPCharacter_CPP::Tick(float DeltaTime)
 
 	if (Controller && Controller->IsLocalController()) {
 		AUsableActor* Usable = GetUsableInView();
-		//UE_LOG(LogTemp, Warning, TEXT("Usable: %s"), *Usable->GetName());
-		//UE_LOG(LogTemp, Warning, TEXT("FocusedUsableActor: %s"), *FocusedUsableActor->GetName());
 		if (FocusedUsableActor != Usable) {
 			if (FocusedUsableActor) {
 				FocusedUsableActor->EndFocusItem();
 			}
 			bHasNewFocus = true;
 		}
-
 		FocusedUsableActor = Usable;
-
 		if (Usable) {
 			if (bHasNewFocus) {
 				Usable->StartFocusItem();
 				bHasNewFocus = false;
+			}
+		}
+
+		AFPCharacter_CPP* ActorInView = GetActorInView();
+		if (LastFocusedActor != ActorInView) {
+			if (LastFocusedActor) {
+				EndFocusItem();
+			}
+			bHasNewActor = true;
+		}
+		LastFocusedActor = ActorInView;
+		if (ActorInView) {
+			if (bHasNewActor) {
+				StartFocusItem();
+				bHasNewActor = false;
 			}
 		}
 	}
@@ -136,7 +170,10 @@ float AFPCharacter_CPP::GetJumpVelocity()
 void AFPCharacter_CPP::Use_Implementation()
 {
 	AUsableActor* Usable = GetUsableInView();
-
+	AFPCharacter_CPP* ActorInView = GetActorInView();
+	if (ActorInView) {
+		OnUsed(ActorInView);
+	}
 	if (Usable) {
 		Usable->OnUsed(this);
 	}
