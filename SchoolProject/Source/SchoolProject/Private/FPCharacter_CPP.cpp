@@ -55,6 +55,9 @@ AUsableActor* AFPCharacter_CPP::GetUsableInView()
 
 	FHitResult Hit(ForceInit);
 	GetWorld()->LineTraceSingleByObjectType(Hit, StartTrace, EndTrace, FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),TraceParams);
+	if (Hit.GetActor() == NULL) {
+		GetWorld()->LineTraceSingleByObjectType(Hit, StartTrace, EndTrace, FCollisionObjectQueryParams(ECollisionChannel::ECC_WorldDynamic), TraceParams);
+	}
 
 	return Cast<AUsableActor>(Hit.GetActor());
 }

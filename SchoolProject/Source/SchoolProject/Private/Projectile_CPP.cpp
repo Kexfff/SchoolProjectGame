@@ -12,11 +12,14 @@ AProjectile_CPP::AProjectile_CPP()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	ProjectileMovement->bAutoActivate = false;
+	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * 1500.f);
 }
 
 void AProjectile_CPP::LaunchProjectile(float Speed)
 {
-	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
+	//ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
+
+	
 	ProjectileMovement->Activate();
 
 	UE_LOG(LogTemp, Warning, TEXT("Launching"))
