@@ -117,7 +117,7 @@ void AFPCharacter_CPP::Tick(float DeltaTime)
 			LastFocusedActor = ActorInView;
 			if (ActorInView) {
 				if (bHasNewActor) {
-					StartFocusItem();
+					StartFocusItem(ActorInView);
 					bHasNewActor = false;
 				}
 			}

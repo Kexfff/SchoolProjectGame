@@ -75,7 +75,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		bool OnUsed(AFPCharacter_CPP* character);
 	UFUNCTION(BlueprintImplementableEvent)
-		bool StartFocusItem();
+		bool StartFocusItem(AFPCharacter_CPP* character);
 	UFUNCTION(BlueprintImplementableEvent)
 		bool EndFocusItem();
 
