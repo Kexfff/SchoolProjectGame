@@ -12,23 +12,33 @@ AProjectile_CPP::AProjectile_CPP()
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movement"));
 	ProjectileMovement->bAutoActivate = false;
-	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * 1500.f);
+	
 }
 
 void AProjectile_CPP::LaunchProjectile(float Speed)
 {
 	//ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * Speed);
 
-	
-	ProjectileMovement->Activate();
+	if (!ensure(ProjectileMovement)) {
+		return;
+	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Launching"))
+	ProjectileMovement->Activate();
+	
+
+
+
+
+	
+
+	//UE_LOG(LogTemp, Warning, TEXT("Launching"))
 }
 
 // Called when the game starts or when spawned
 void AProjectile_CPP::BeginPlay()
 {
 	Super::BeginPlay();
+	ProjectileMovement->SetVelocityInLocalSpace(FVector::ForwardVector * 10000.f);
 	
 }
 

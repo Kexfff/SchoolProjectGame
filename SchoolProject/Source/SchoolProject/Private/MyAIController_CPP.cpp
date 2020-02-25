@@ -12,10 +12,10 @@ void AMyAIController_CPP::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	auto Player = GetWorld()->GetFirstPlayerController()->GetPawn();
-	auto ControlledChar = GetPawn();
+	//auto Player = GetWorld()->GetFirstPlayerController()->GetPawn();
+	//auto ControlledChar = GetPawn();
 
-	if (ensure(Player && ControlledChar)) {
+	//if (ensure(Player && ControlledChar)) {
 		//MoveToActor(Player, AcceptanceRadius);
-	}
+	//}
 }

@@ -27,7 +27,8 @@ void UFiringComponent::BeginPlay()
 
 void UFiringComponent::Fire()
 {
-	if (!Weapon) { return; }
+	if (!ensure(Weapon)) { return; }
+	if (!ensure(Projectile_BP)) { return; }
 	auto Projectile = GetWorld()->SpawnActor<AProjectile_CPP>(Projectile_BP, Weapon->GetSocketLocation(FName("Projectile")), Weapon->GetSocketRotation(FName("Projectile")));
 	Projectile->LaunchProjectile(LaunchSpeed);
 }

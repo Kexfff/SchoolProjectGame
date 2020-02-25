@@ -90,34 +90,36 @@ void AFPCharacter_CPP::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Controller && Controller->IsLocalController()) {
-		AUsableActor* Usable = GetUsableInView();
-		if (FocusedUsableActor != Usable) {
-			if (FocusedUsableActor) {
-				FocusedUsableActor->EndFocusItem();
+	if (ensure(Controller)) {
+		if (Controller->IsLocalController()) {
+			AUsableActor* Usable = GetUsableInView();
+			if (FocusedUsableActor != Usable) {
+				if (FocusedUsableActor) {
+					FocusedUsableActor->EndFocusItem();
+				}
+				bHasNewFocus = true;
 			}
-			bHasNewFocus = true;
-		}
-		FocusedUsableActor = Usable;
-		if (Usable) {
-			if (bHasNewFocus) {
-				Usable->StartFocusItem();
-				bHasNewFocus = false;
+			FocusedUsableActor = Usable;
+			if (Usable) {
+				if (bHasNewFocus) {
+					Usable->StartFocusItem();
+					bHasNewFocus = false;
+				}
 			}
-		}
 
-		AFPCharacter_CPP* ActorInView = GetActorInView();
-		if (LastFocusedActor != ActorInView) {
-			if (LastFocusedActor) {
-				EndFocusItem();
+			AFPCharacter_CPP* ActorInView = GetActorInView();
+			if (LastFocusedActor != ActorInView) {
+				if (LastFocusedActor) {
+					EndFocusItem();
+				}
+				bHasNewActor = true;
 			}
-			bHasNewActor = true;
-		}
-		LastFocusedActor = ActorInView;
-		if (ActorInView) {
-			if (bHasNewActor) {
-				StartFocusItem();
-				bHasNewActor = false;
+			LastFocusedActor = ActorInView;
+			if (ActorInView) {
+				if (bHasNewActor) {
+					StartFocusItem();
+					bHasNewActor = false;
+				}
 			}
 		}
 	}
