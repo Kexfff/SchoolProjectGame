@@ -15,10 +15,10 @@ AFPCharacter_CPP::AFPCharacter_CPP()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	FPCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-	FPCameraComponent->SetupAttachment((USceneComponent*)GetCapsuleComponent());
-	FPCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
-	FPCameraComponent->bUsePawnControlRotation = true;
+	//FPCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	//FPCameraComponent->SetupAttachment((USceneComponent*)GetCapsuleComponent());
+	//FPCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 50.0f + BaseEyeHeight));
+	//FPCameraComponent->bUsePawnControlRotation = true;
 
 	MaxUseDistance = 200;
 	bHasNewFocus = true;
@@ -62,7 +62,7 @@ AUsableActor* AFPCharacter_CPP::GetUsableInView()
 	return Cast<AUsableActor>(Hit.GetActor());
 }
 
-AFPCharacter_CPP* AFPCharacter_CPP::GetActorInView()
+AActor* AFPCharacter_CPP::GetActorInView()
 {
 	FVector CamLoc;
 	FRotator CamRot;
@@ -82,7 +82,7 @@ AFPCharacter_CPP* AFPCharacter_CPP::GetActorInView()
 	FHitResult Hit(ForceInit);
 	GetWorld()->LineTraceSingleByObjectType(Hit, StartTrace, EndTrace, FCollisionObjectQueryParams(ECollisionChannel::ECC_Pawn), TraceParams);
 
-	return Cast<AFPCharacter_CPP>(Hit.GetActor());
+	return Hit.GetActor();
 }
 
 // Called every frame
@@ -107,7 +107,7 @@ void AFPCharacter_CPP::Tick(float DeltaTime)
 				}
 			}
 
-			AFPCharacter_CPP* ActorInView = GetActorInView();
+			AFPCharacter_CPP* ActorInView = Cast<AFPCharacter_CPP>(GetActorInView());
 			if (LastFocusedActor != ActorInView) {
 				if (LastFocusedActor) {
 					EndFocusItem();
@@ -175,7 +175,7 @@ float AFPCharacter_CPP::GetJumpVelocity()
 void AFPCharacter_CPP::Use_Implementation()
 {
 	AUsableActor* Usable = GetUsableInView();
-	AFPCharacter_CPP* ActorInView = GetActorInView();
+	AFPCharacter_CPP* ActorInView = Cast<AFPCharacter_CPP>(GetActorInView());
 	if (ActorInView) {
 		OnUsed(ActorInView);
 	}

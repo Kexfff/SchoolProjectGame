@@ -26,7 +26,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	AUsableActor* GetUsableInView();
-	AFPCharacter_CPP* GetActorInView();
+
+	UFUNCTION(BlueprintCallable)
+	AActor* GetActorInView();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	float MaxUseDistance;
