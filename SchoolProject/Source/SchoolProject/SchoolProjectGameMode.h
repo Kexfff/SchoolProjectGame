@@ -13,6 +13,9 @@ class ASchoolProjectGameMode : public AGameModeBase
 
 public:
 	ASchoolProjectGameMode();
+
+	UFUNCTION(Exec)
+	void TurnOnCreativeMode();
 };
 
 

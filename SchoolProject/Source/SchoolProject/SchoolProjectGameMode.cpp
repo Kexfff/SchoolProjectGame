@@ -2,9 +2,15 @@
 
 #include "SchoolProjectGameMode.h"
 #include "SchoolProjectCharacter.h"
+#include "Engine/World.h"
 #include "UObject/ConstructorHelpers.h"
 
 ASchoolProjectGameMode::ASchoolProjectGameMode()
 {
 	
+}
+
+void ASchoolProjectGameMode::TurnOnCreativeMode()
+{
+	auto PlayerControllers = GetWorld()->GetPlayerControllerIterator();
 }
